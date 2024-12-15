@@ -15,6 +15,6 @@ class Track123Response
      */
     public function response(array $response): array
     {
-        print_r($response);die;
+        return is_array($response)?$response:[];
     }
 }

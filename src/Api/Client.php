@@ -14,6 +14,9 @@ class Client
 {
     private object $client;
 
+    /**
+     * @throws \Exception
+     */
     public function track123($apikey): Client
     {
         $this->client = new Track123($apikey);
@@ -22,7 +25,7 @@ class Client
 
     public function registerTrackNo(string $trackNo): array
     {
-        return $this->client->registerTrackNo($trackNo);
+        return $this->response($this->client->registerTrackNo($trackNo));
     }
 
     public function getTrackInfo(string $trackNo): array
