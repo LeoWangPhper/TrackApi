@@ -1,0 +1,20 @@
+{
+    "name": "dahua/track-api",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "Dahua\\TrackApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "LeoWangPhper",
+            "email": "leowangphper@gmail.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.9",
+        "ext-json": "*"
+    },
+    "minimum-stability": "dev"
+}
