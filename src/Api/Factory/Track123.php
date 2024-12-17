@@ -103,7 +103,7 @@ class Track123 implements TrackInterface
         return (new Track123Response())->response($response);
     }
 
-    public function webhook(string $api_key, array $data, &$returnData): array
+    public function webhook(string $api_key, array $data): array
     {
         ## 验证合法性
         if(empty($data['verify']) || empty($data['verify']['timestamp']) || empty($data['verify']['signature'])){

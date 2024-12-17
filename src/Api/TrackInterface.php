@@ -26,13 +26,12 @@ interface TrackInterface
     public function getTrackInfo(string $trackNo): array;
 
     /***
+     * @param string $api_key
      * @param array $data
-     * @param $returnData
-     * @return bool
+     * @return array
      * @author Leo.Wang@php
-     * webhook
      */
-    public function webhook(string $api_key, array $data, &$returnData): array;
+    public function webhook(string $api_key, array $data): array;
 
 
     /***
