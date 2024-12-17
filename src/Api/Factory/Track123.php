@@ -32,6 +32,20 @@ class Track123 implements TrackInterface
             throw  new \Exception('trackNo is required');
         }
 
+        $trackNos = array_filter(array_unique(explode(',', $trackNo)));
+
+        if(count($trackNos) > 1){
+            throw  new \Exception('trackNo must be one');
+        }
+
+        $body = [];
+
+        foreach($trackNos as $trackNo){
+            $body[] = [
+                'trackNo' => $trackNo
+            ];
+        }
+
         $client = new \GuzzleHttp\Client();
         $response = $client->request('POST', 'https://api.track123.com/gateway/open-api/tk/v2/track/import', [
             'headers' => [
@@ -39,9 +53,7 @@ class Track123 implements TrackInterface
                 'accept'=>'application/json',
                 'Track123-Api-Secret' => $this->api_key
             ],
-            'body' => json_encode([[
-                'trackNo' => $trackNo
-            ]], JSON_UNESCAPED_UNICODE)
+            'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
         ]);
 
         if($response->getStatusCode() != '200'){
@@ -57,6 +69,18 @@ class Track123 implements TrackInterface
             throw  new \Exception('trackNo is required');
         }
 
+        $trackNos = array_filter(array_unique(explode(',', $trackNo)));
+
+        if(count($trackNos) > 1){
+            throw  new \Exception('trackNo must be one');
+        }
+
+        $body = [];
+
+        foreach($trackNos as $trackNo){
+            $body['trackNos'][] = $trackNo;
+        }
+
         $client = new \GuzzleHttp\Client();
         $response = $client->request('POST', 'https://api.track123.com/gateway/open-api/tk/v2/track/query', [
             'headers' => [
@@ -64,9 +88,7 @@ class Track123 implements TrackInterface
                 'accept'=>'application/json',
                 'Track123-Api-Secret' => $this->api_key
             ],
-            'body' => json_encode([
-                'trackNos' => [$trackNo]
-            ], JSON_UNESCAPED_UNICODE)
+            'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
         ]);
 
         if($response->getStatusCode() != '200'){
@@ -79,5 +101,20 @@ class Track123 implements TrackInterface
     public function response(array $response): array
     {
         return (new Track123Response())->response($response);
+    }
+
+    public function webhook(string $api_key, array $data, &$returnData): array
+    {
+        ## 验证合法性
+        if(empty($data['verify']) || empty($data['verify']['timestamp']) || empty($data['verify']['signature'])){
+            throw  new \Exception('verify is required');
+        }
+
+        $sign = hash('sha256', $api_key.$data['verify']['timestamp']);
+        if($sign != $data['verify']['signature']){
+            throw  new \Exception('signature error');
+        }
+
+        return $data['data'];
     }
 }
