@@ -23,7 +23,7 @@ class Client
         return $this;
     }
 
-    public function track718track17($apikey): Client
+    public function track17($apikey): Client
     {
         $this->client = new Track17($apikey);
         return $this;
