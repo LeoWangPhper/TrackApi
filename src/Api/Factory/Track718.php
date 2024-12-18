@@ -100,14 +100,14 @@ class Track718 implements TrackInterface
         return (new Track718Response())->response($response);
     }
 
-    public function webhook(string $api_key, array $data, &$returnData): array
+    public function webhook(array $data): array
     {
         ## 验证合法性
         if(empty($data['verify']) || empty($data['verify']['timestamp']) || empty($data['verify']['sign'])){
             throw  new \Exception('verify is required');
         }
 
-        $sign = hash('sha256', $api_key.$data['verify']['timestamp']);
+        $sign = hash('sha256', $this->api_key.$data['verify']['timestamp']);
         if($sign != $data['verify']['sign']){
             throw  new \Exception('signature error');
         }

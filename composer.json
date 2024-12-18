@@ -1,6 +1,6 @@
 {
     "name": "leowangphper/track-api",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "autoload": {
         "psr-4": {
             "Dahua\\TrackApi\\": "src/"

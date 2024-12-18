@@ -103,14 +103,14 @@ class Track123 implements TrackInterface
         return (new Track123Response())->response($response);
     }
 
-    public function webhook(string $api_key, array $data): array
+    public function webhook(array $data): array
     {
         ## 验证合法性
         if(empty($data['verify']) || empty($data['verify']['timestamp']) || empty($data['verify']['signature'])){
             throw  new \Exception('verify is required');
         }
 
-        $sign = hash('sha256', $api_key.$data['verify']['timestamp']);
+        $sign = hash('sha256', $this->api_key.$data['verify']['timestamp']);
         if($sign != $data['verify']['signature']){
             throw  new \Exception('signature error');
         }

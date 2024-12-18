@@ -45,9 +45,9 @@ class Client
         return $this->response($this->client->getTrackInfo($trackNo));
     }
 
-    public function webhook(string $api_key, array $data): array
+    public function webhook(array $data): array
     {
-        return $this->client->webhook($api_key, $data);
+        return $this->client->webhook($data);
     }
 
     public function response(array $response): array
