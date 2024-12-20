@@ -8,6 +8,9 @@ namespace Dahua\TrackApi\Api\Factory;
 
 use Dahua\TrackApi\Api\Response\Track718Response;
 use Dahua\TrackApi\Api\TrackInterface;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 
 class Track718 implements TrackInterface
 {
@@ -41,15 +44,29 @@ class Track718 implements TrackInterface
             ];
         }
 
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('POST', 'https://apigetway.track718.net/v2/tracks', [
-            'headers' => [
-                'Content-Type'=>'application/json',
-                'accept'=>'application/json',
-                'Track718-API-Key' => $this->api_key
-            ],
-            'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
-        ]);
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', 'https://apigetway.track718.net/v2/tracks', [
+                'headers' => [
+                    'Content-Type'=>'application/json',
+                    'accept'=>'application/json',
+                    'Track718-API-Key' => $this->api_key
+                ],
+                'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
+            ]);
+        }catch(ClientException $e) {
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() === 401) {
+                throw new \Exception($e->getResponse()->getBody()->getContents());
+            } else {
+                throw new \Exception($e->getMessage());
+            }
+        }catch (RequestException $e){
+            throw new \Exception($e->getMessage());
+        }catch(BadResponseException $e){
+            throw new \Exception($e->getMessage());
+        }catch (\InvalidArgumentException $e) {
+            throw new \Exception($e->getMessage());
+        }
 
         if($response->getStatusCode() != '200'){
             throw  new \Exception('Request failed');
@@ -78,15 +95,29 @@ class Track718 implements TrackInterface
             ];
         }
 
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('POST', 'https://apigetway.track718.net/v2/tracking/query', [
-            'headers' => [
-                'Content-Type'=>'application/json',
-                'accept'=>'application/json',
-                'Track718-API-Key' => $this->api_key
-            ],
-            'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
-        ]);
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', 'https://apigetway.track718.net/v2/tracking/query', [
+                'headers' => [
+                    'Content-Type'=>'application/json',
+                    'accept'=>'application/json',
+                    'Track718-API-Key' => $this->api_key
+                ],
+                'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
+            ]);
+        }catch(ClientException $e) {
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() === 401) {
+                throw new \Exception($e->getResponse()->getBody()->getContents());
+            } else {
+                throw new \Exception($e->getMessage());
+            }
+        }catch (RequestException $e){
+            throw new \Exception($e->getMessage());
+        }catch(BadResponseException $e){
+            throw new \Exception($e->getMessage());
+        }catch (\InvalidArgumentException $e) {
+            throw new \Exception($e->getMessage());
+        }
 
         if($response->getStatusCode() != '200'){
             throw  new \Exception('Request failed');
@@ -108,6 +139,7 @@ class Track718 implements TrackInterface
         }
 
         $sign = hash('sha256', $this->api_key.$data['verify']['timestamp']);
+
         if($sign != $data['verify']['sign']){
             throw  new \Exception('signature error');
         }

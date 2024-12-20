@@ -8,6 +8,9 @@ namespace Dahua\TrackApi\Api\Factory;
 
 use Dahua\TrackApi\Api\Response\Track123Response;
 use Dahua\TrackApi\Api\TrackInterface;
+use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\RequestException;
 
 class Track123 implements TrackInterface
 {
@@ -46,15 +49,29 @@ class Track123 implements TrackInterface
             ];
         }
 
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('POST', 'https://api.track123.com/gateway/open-api/tk/v2/track/import', [
-            'headers' => [
-                'Content-Type'=>'application/json',
-                'accept'=>'application/json',
-                'Track123-Api-Secret' => $this->api_key
-            ],
-            'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
-        ]);
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', 'https://api.track123.com/gateway/open-api/tk/v2/track/import', [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'accept' => 'application/json',
+                    'Track123-Api-Secret' => $this->api_key
+                ],
+                'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
+            ]);
+        }catch(ClientException $e) {
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() === 401) {
+                throw new \Exception($e->getResponse()->getBody()->getContents());
+            } else {
+                throw new \Exception($e->getMessage());
+            }
+        }catch (RequestException $e){
+            throw new \Exception($e->getMessage());
+        }catch(BadResponseException $e){
+            throw new \Exception($e->getMessage());
+        }catch (\InvalidArgumentException $e) {
+            throw new \Exception($e->getMessage());
+        }
 
         if($response->getStatusCode() != '200'){
             throw  new \Exception('Request failed');
@@ -81,15 +98,29 @@ class Track123 implements TrackInterface
             $body['trackNos'][] = $trackNo;
         }
 
-        $client = new \GuzzleHttp\Client();
-        $response = $client->request('POST', 'https://api.track123.com/gateway/open-api/tk/v2/track/query', [
-            'headers' => [
-                'Content-Type'=>'application/json',
-                'accept'=>'application/json',
-                'Track123-Api-Secret' => $this->api_key
-            ],
-            'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
-        ]);
+        try {
+            $client = new \GuzzleHttp\Client();
+            $response = $client->request('POST', 'https://api.track123.com/gateway/open-api/tk/v2/track/query', [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'accept' => 'application/json',
+                    'Track123-Api-Secret' => $this->api_key
+                ],
+                'body' => json_encode($body, JSON_UNESCAPED_UNICODE)
+            ]);
+        }catch(ClientException $e) {
+            if ($e->getResponse() && $e->getResponse()->getStatusCode() === 401) {
+                throw new \Exception($e->getResponse()->getBody()->getContents());
+            } else {
+                throw new \Exception($e->getMessage());
+            }
+        }catch (RequestException $e){
+            throw new \Exception($e->getMessage());
+        }catch(BadResponseException $e){
+            throw new \Exception($e->getMessage());
+        }catch (\InvalidArgumentException $e) {
+            throw new \Exception($e->getMessage());
+        }
 
         if($response->getStatusCode() != '200'){
             throw  new \Exception('Request failed');
