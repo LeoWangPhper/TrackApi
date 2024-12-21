@@ -97,7 +97,7 @@ class Track718 implements TrackInterface
 
         try {
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('POST', 'https://apigetway.track718.net/v2/tracking/query', [
+            $response = $client->request('POST', 'https://apigetway.track718.net/v3/tracking/query', [
                 'headers' => [
                     'Content-Type'=>'application/json',
                     'accept'=>'application/json',

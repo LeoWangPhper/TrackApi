@@ -46,7 +46,7 @@ class Track17 implements TrackInterface
 
         try {
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('POST', 'https://api.17track.net/track/v2/register', [
+            $response = $client->request('POST', 'https://api.17track.net/track/v2.2/register', [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'accept' => 'application/json',
@@ -93,7 +93,7 @@ class Track17 implements TrackInterface
 
         try {
             $client = new \GuzzleHttp\Client();
-            $response = $client->request('POST', 'https://api.17track.net/track/v2/gettrackinfo', [
+            $response = $client->request('POST', 'https://api.17track.net/track/v2.2/gettrackinfo', [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'accept' => 'application/json',
